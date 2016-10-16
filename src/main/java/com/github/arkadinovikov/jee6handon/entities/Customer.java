@@ -8,6 +8,7 @@ package com.github.arkadinovikov.jee6handon.entities;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -31,10 +32,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c")
 	, @NamedQuery(name = "Customer.findByCustomerId", query = "SELECT c FROM Customer c WHERE c.customerId = :customerId")
 	, @NamedQuery(name = "Customer.findByName", query = "SELECT c FROM Customer c WHERE c.name = :name")
-	, @NamedQuery(name = "Customer.findByAddressline1", query = "SELECT c FROM Customer c WHERE c.addressline1 = :addressline1")
-	, @NamedQuery(name = "Customer.findByAddressline2", query = "SELECT c FROM Customer c WHERE c.addressline2 = :addressline2")
-	, @NamedQuery(name = "Customer.findByCity", query = "SELECT c FROM Customer c WHERE c.city = :city")
-	, @NamedQuery(name = "Customer.findByState", query = "SELECT c FROM Customer c WHERE c.state = :state")
+	, @NamedQuery(name = "Customer.findByAddressline1", query = "SELECT c FROM Customer c WHERE c.address.addressline1 = :addressline1")
+	, @NamedQuery(name = "Customer.findByAddressline2", query = "SELECT c FROM Customer c WHERE c.address.addressline2 = :addressline2")
+	, @NamedQuery(name = "Customer.findByCity", query = "SELECT c FROM Customer c WHERE c.address.city = :city")
+	, @NamedQuery(name = "Customer.findByState", query = "SELECT c FROM Customer c WHERE c.address.state = :state")
 	, @NamedQuery(name = "Customer.findByPhone", query = "SELECT c FROM Customer c WHERE c.phone = :phone")
 	, @NamedQuery(name = "Customer.findByFax", query = "SELECT c FROM Customer c WHERE c.fax = :fax")
 	, @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email")
@@ -44,6 +45,10 @@ public class Customer implements Serializable
 {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Embedded
+	private Address address;
+	
 	@Id
     @Basic(optional = false)
     @NotNull
@@ -52,18 +57,6 @@ public class Customer implements Serializable
 	@Size(max = 30)
     @Column(name = "NAME")
 	private String name;
-	@Size(max = 30)
-    @Column(name = "ADDRESSLINE1")
-	private String addressline1;
-	@Size(max = 30)
-    @Column(name = "ADDRESSLINE2")
-	private String addressline2;
-	@Size(max = 25)
-    @Column(name = "CITY")
-	private String city;
-	@Size(max = 2)
-    @Column(name = "STATE")
-	private String state;
 	// @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="電話/FAXの形式が無効です。xxx-xxx-xxxxの形式にしてください")//if the field contains phone or fax number consider using this annotation to enforce field validation
 	@Size(max = 12)
     @Column(name = "PHONE")
@@ -81,9 +74,6 @@ public class Customer implements Serializable
 	@JoinColumn(name = "DISCOUNT_CODE", referencedColumnName = "DISCOUNT_CODE")
     @ManyToOne(optional = false)
 	private DiscountCode discountCode;
-	@JoinColumn(name = "ZIP", referencedColumnName = "ZIP_CODE")
-    @ManyToOne(optional = false)
-	private MicroMarket zip;
 
 	public Customer()
 	{
@@ -112,46 +102,6 @@ public class Customer implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	public String getAddressline1()
-	{
-		return addressline1;
-	}
-
-	public void setAddressline1(String addressline1)
-	{
-		this.addressline1 = addressline1;
-	}
-
-	public String getAddressline2()
-	{
-		return addressline2;
-	}
-
-	public void setAddressline2(String addressline2)
-	{
-		this.addressline2 = addressline2;
-	}
-
-	public String getCity()
-	{
-		return city;
-	}
-
-	public void setCity(String city)
-	{
-		this.city = city;
-	}
-
-	public String getState()
-	{
-		return state;
-	}
-
-	public void setState(String state)
-	{
-		this.state = state;
 	}
 
 	public String getPhone()
@@ -204,14 +154,14 @@ public class Customer implements Serializable
 		this.discountCode = discountCode;
 	}
 
-	public MicroMarket getZip()
+	public Address getAddress()
 	{
-		return zip;
+		return address;
 	}
 
-	public void setZip(MicroMarket zip)
+	public void setAddress(Address address)
 	{
-		this.zip = zip;
+		this.address = address;
 	}
 
 	@Override
@@ -241,7 +191,7 @@ public class Customer implements Serializable
 	@Override
 	public String toString()
 	{
-		return "com.github.arkadinovikov.jee6handon.entities.Customer[ customerId=" + customerId + " ]";
+		return name + "[" + customerId + "]";
 	}
 	
 }
