@@ -8,6 +8,7 @@ package com.github.arkadinovikov.jee6handon;
 import com.github.arkadinovikov.jee6handon.entities.Customer;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceContext;
  * @author Novikov
  */
 @Stateless
+@Named
 public class CustomerSessionBean
 {
 	@PersistenceContext
